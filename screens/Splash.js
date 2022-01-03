@@ -5,13 +5,12 @@ import {ActivityIndicator, Colors} from "react-native-paper";
 
 const Splash = ({navigation}) => {
 
-
     const changeScreen = () => {
         navigation.replace('Pets');
     }
     React.useEffect(() => {
         setTimeout(changeScreen, 2000);
-    });
+    },[]);
 
     return (
         <View style={styles.body}>

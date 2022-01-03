@@ -140,11 +140,10 @@ const MainScreen = ({navigation}) => {
         setShouldShow(false);
     }
     const addToList = () => {
-        console.log(hasNameErrors());
-        console.log(hasDesErrors());
-        console.log(hasGenderErrors());
-        console.log(hasImageErrors());
-        if (hasNameErrors || hasDesErrors  || hasGenderErrors || hasImageErrors){
+        if (hasNameErrors() || hasDesErrors() || hasGenderErrors() || hasImageErrors()) {
+            Alert.alert('Warning',"Enter Valid Data",[{text: "OK"}]);
+            return false;
+        }else{
             const newId = Data.length + 1;
             setData([...Data, {
                 id: newId,
@@ -156,18 +155,17 @@ const MainScreen = ({navigation}) => {
                 Description: Description,
             }])
             setNull();
-        }else{
-            Alert.alert('Enter Valid Data.');
         }
+
     }
     const hasNameErrors = () => {
         const regex = /^[a-zA-Z]+(([' -][a-zA-Z ])?[a-zA-Z]*)*$/g;
         return !regex.test(name);
     };
     const hasDesErrors = () => {
-        return Description.length > 20;
+        return Description.length > 20 || Description === '';
     }
-    const hasGenderErrors = () =>{
+    const hasGenderErrors = () => {
         return Gender == null;
     }
     const hasImageErrors = () => {
@@ -210,10 +208,11 @@ const MainScreen = ({navigation}) => {
                             </Picker>
                         </View>
 
-                        <TextInput style={{marginTop: 12,}}
+                        <TextInput style={styles.marginTop}
                                    mode={"outlined"}
                                    label={"Description"}
                                    placeholder={"Enter Description"}
+                                   maxLength={20}
                                    onChangeText={dec => {
                                        setDescription(dec)
                                        const len = dec.length.toString() + "/20"
@@ -226,7 +225,7 @@ const MainScreen = ({navigation}) => {
                         </HelperText>
 
                         <TextInput
-                            style={{marginTop: 12,}}
+                            style={styles.marginTop}
                             mode={"outlined"}
                             label={"Date of Birth"}
                             value={Dob}
@@ -246,9 +245,9 @@ const MainScreen = ({navigation}) => {
                             />
                         )}
 
-                        <View style={{flexDirection: 'column',}}>
-                            <Text style={{marginTop: 12, fontSize: 20}}>Gender :</Text>
-                            <View style={{alignItems: 'center', flexDirection: 'row',}}>
+                        <View>
+                            <Text style={styles.label}>Gender :</Text>
+                            <View style={styles.radioGroup}>
                                 <Text>Male : </Text>
                                 <RadioButton
                                     value="Male"
@@ -256,7 +255,7 @@ const MainScreen = ({navigation}) => {
                                     onPress={() => setGender('Male')}
                                 />
                             </View>
-                            <View style={{justifyContent: "flex-start", alignItems: 'center', flexDirection: 'row',}}>
+                            <View style={styles.radioGroup}>
                                 <Text>FeMale : </Text>
                                 <RadioButton
                                     value="FeMale"
@@ -268,7 +267,7 @@ const MainScreen = ({navigation}) => {
 
                         <View
                             style={{flexDirection: 'row'}}>
-                            <Text style={{marginTop: 12, fontSize: 20}}>Upload Image :</Text>
+                            <Text style={styles.label}>Upload Image :</Text>
                             <IconButton
                                 icon="image-plus"
                                 color={Colors.red500}
@@ -283,7 +282,7 @@ const MainScreen = ({navigation}) => {
                                     source={{
                                         uri: image,
                                     }}
-                                    style={{width: 150, height: 150}}
+                                    style={styles.uploadedImg}
                                 />
                             ) : null}
                         </View>
@@ -312,7 +311,6 @@ const MainScreen = ({navigation}) => {
 const styles = StyleSheet.create({
     body: {
         flex: 1,
-
     },
     card: {
         margin: 8,
@@ -328,6 +326,17 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 16,
     },
+    marginTop: {
+        marginTop: 12,
+    },
+    label: {
+        marginTop: 12,
+        fontSize: 20
+    },
+    radioGroup: {
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
     dropDown: {
         borderWidth: 1,
         borderRadius: 5,
@@ -341,6 +350,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: '#00c9bf',
         borderRadius: 12,
+    },
+    uploadedImg: {
+        width: 150,
+        height: 150,
     },
     image: {
         marginVertical: 24,
